@@ -14,7 +14,7 @@ spec:
     spec:
       initContainers:
       - name: scripts
-        image: anwmc/test:1
+        image: anwmc/test:latest
         command:
         - sh
         - -c
