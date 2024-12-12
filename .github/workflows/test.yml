@@ -41,7 +41,7 @@ jobs:
       # Step 6: Apply Kubernetes configurations
       - name: Apply Kubernetes Configurations
         run: |
-          kubectl apply -f influxdeployment.yml
+          kubectl apply -f influxdbdeployment.yml
           kubectl apply -f k6deployment.yml
 
       # Step 7: Verify Pods
@@ -61,4 +61,4 @@ jobs:
         if: always()
         run: |
           kubectl delete -f k6deployment.yml
-          kubectl delete -f influxdeployment.yml
+          kubectl delete -f influxdbdeployment.yml
