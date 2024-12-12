@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k6-performance-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: k6-runner
+  template:
+    metadata:
+      labels:
+        app: k6-runner
+    spec:
+      initContainers:
+      - name: scripts
+        image: anwmc/test:1
+        command:
+        - sh
+        - -c
+        - >
+          mkdir -p /test &&
+          cp -R /scripts/* /test/
+        volumeMounts:
+        - name: script-volume
+          mountPath: /test
+ 
+      containers:
+      - name: k6-runner
+        image: grafana/k6:latest
+        command: ["/bin/sh", "-c"]
+        args:
+        - |
+          # Find and run the first JSON script
+          # Note: Modify this if you have multiple scripts or specific naming
+          k6 run  --out influxdb=http://influxdb:8087/k6db /test/k6script.js
+        env:
+        - name: INFLUXDB_URL
+          value: "http://influxdb:8087"
+        - name: INFLUXDB_DB
+          value: "k6db"  
+       
+        volumeMounts:
+        - name: script-volume
+          mountPath: /test
+ 
+      volumes:
+      - name: script-volume
+        emptyDir: {}
+      - name: app-volume
+        emptyDir: {}
