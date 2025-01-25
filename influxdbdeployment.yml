@@ -23,7 +23,7 @@ spec:
       volumes:
       - name: influxdb-storage
         emptyDir: {}
----
+
 apiVersion: v1
 kind: Service
 metadata:
